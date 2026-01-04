@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>协同消费的智慧 - 互动教学网页</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'SimSun', serif;
+            line-height: 1.6;
+            color: #5d4037;
+            background-color: #faf4e8;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23faf4e8"/><path d="M0 0L100 100M100 0L0 100" stroke="%23e8d9c0" stroke-width="0.5" opacity="0.5"/></svg>');
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 标题样式 */
+        h1 {
+            color: #8b4513;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        
+        h2 {
+            color: #a0522d;
+            margin: 20px 0;
+            font-size: 1.8em;
+            border-bottom: 2px solid #d4a76a;
+            padding-bottom: 10px;
+            background: linear-gradient(90deg, #f8f0d9, transparent);
+            padding-left: 15px;
+            border-radius: 5px;
+        }
+        
+        h3 {
+            color: #8b4513;
+            margin: 15px 0;
+            font-size: 1.4em;
+            background-color: #f8f0d9;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border-left: 5px solid #d4a76a;
+        }
+        
+        /* 导航样式 */
+        .navbar {
+            background-color: #f8f0d9;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"><rect width="50" height="50" fill="%23f8f0d9"/><path d="M5 0L5 50M15 0L15 50M25 0L25 50M35 0L35 50M45 0L45 50" stroke="%23e8d9c0" stroke-width="0.5" opacity="0.8"/></svg>');
+            border-right: 2px solid #d4a76a;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .nav-item {
+            color: #8b4513;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 8px 0;
+            width: 100%;
+            text-align: center;
+            background-color: #fff8e1;
+            border: 1px solid #d4a76a;
+            font-weight: bold;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: #d4a76a;
+            color: white;
+            transform: translateX(10px);
+            box-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+        }
+        
+        /* 内容区域样式 */
+        .content-section {
+            background-color: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* 历史导入部分 */
+        .historical-intro {
+            background-color: #e8f4f8;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+        }
+        
+        /* 核心观点样式 */
+        .core-point {
+            background-color: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        
+        /* 案例分析样式 */
+        .case-study {
+            background-color: #fff3cd;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        /* 互动环节样式 */
+        .interactive-section {
+            background-color: #d4edda;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            border: 2px solid #28a745;
+        }
+        
+        /* 游戏容器样式 */
+        .game-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .game-column {
+            flex: 1;
+            min-width: 250px;
+            margin: 10px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* 拖拽元素样式 */
+        .drag-item {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .drag-item:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .drag-item:active {
+            cursor: grabbing;
+        }
+        
+        /* 放置区域样式 */
+        .drop-zone {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px dashed #3498db;
+            border-radius: 5px;
+            min-height: 100px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone:hover, .drop-zone.drag-over {
+            background-color: #e8f4f8;
+            border-color: #2980b9;
+        }
+        
+        /* 测验样式 */
+        .quiz-question {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .quiz-option {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .quiz-option.selected {
+            background-color: #d4edda;
+            border: 1px solid #28a745;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        /* 结果样式 */
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .result.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .result.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-item {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .game-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面主体结构 -->
+    <div style="display: flex;">
+        <!-- 左侧导航栏 -->
+        <nav class="navbar" style="width: 200px; background-color: #f8f0d9; border-right: 2px solid #d4a76a; padding: 20px; position: fixed; height: 100vh; overflow-y: auto;">
+            <a href="#intro" class="nav-item">📜 课程导入</a>
+            <a href="#section1" class="nav-item">🔄 核心部分1</a>
+            <a href="#section2" class="nav-item">🌍 核心部分2</a>
+            <a href="#section3" class="nav-item">📋 核心部分3</a>
+            <a href="#section4" class="nav-item">⚙️ 核心部分4</a>
+            <a href="#section5" class="nav-item">🚀 核心部分5</a>
+        </nav>
+
+        <!-- 主内容 -->
+        <div class="container" style="margin-left: 220px;">
+        <h1>The Wisdom of Collaborative Consumption</h1>
+        <h1 style="font-size: 1.8em; margin-top: -20px;">协同消费的智慧</h1>
+
+        <!-- 课程导入：丝绸之路的协同消费历史 -->
+        <section id="intro" class="content-section">
+            <h2>📜 从丝绸之路到现代共享：协同消费的历史演变</h2>
+            <div class="historical-intro">
+                <p><strong>丝绸之路的协同消费案例：</strong></p>
+                <p>在古代丝绸之路贸易中，商人们采用了多种协同消费模式来降低成本、提高效率：</p>
+                <ul>
+                    <li><strong>共享驿站</strong>：商队共享沿途的驿站设施，降低了单独建设和维护成本</li>
+                    <li><strong>商队联合</strong>：小规模商人联合组成大型商队，共同承担安全保卫和运输成本</li>
+                    <li><strong>资源共享</strong>：共享水源、草料等稀缺资源，确保长途旅行的可持续性</li>
+                    <li><strong>信息共享</strong>：交换沿途的路况、天气和市场信息，降低贸易风险</li>
+                </ul>
+                <p>这些古代实践与现代协同消费理念不谋而合，都是通过资源共享实现互利共赢。</p>
+            </div>
+            
+            <!-- 苏格拉底提问引导部分 -->
+            <div class="interactive-section" style="margin-top: 30px;">
+                <h3>🧠 Historical Continuity of Collaborative Consumption 协同消费的历史延续性</h3>
+                <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p><strong>Core Text:</strong></p>
+                    <p style="font-style: italic; background-color: #f8f9fa; padding: 15px; border-radius: 5px;">"The argument behind this concept is as old as barter economies. Trading a cow for a buffalo, jointly using the village water well, Egyptian homes built around a common courtyard where women gathered to dry spices and children gathered to play—all are examples of shared resources in ancient cultures."</p>
+                    
+                    <h4 style="margin-top: 20px; color: #3498db;">Thinking and Discussion</h4>
+                    <h4 style="margin-top: -10px; font-size: 1.2em; color: #3498db;">思考与讨论</h4>
+                    <div style="margin-left: 20px; line-height: 2;">
+                        <strong>Guiding Question:</strong> What examples of ancient collaborative consumption can you identify from this text?<br>
+                        <strong>引导性问题：</strong>从这段文本中，你能找出哪些古代协同消费的例子？
+                    </div>
+                </div>
+            </div>
+            
+            <p>今天，我们将从这段文本出发，通过思考引导-实践验证-认知重构的教学循环，深入探索现代协同消费的概念、发展和未来前景。</p>
+        </section>
+
+        <!-- Core Part 1: Item Depreciation & Desire for New Things -->
+        <!-- 核心部分1：物品贬值与新事物渴望 -->
+        <section id="section1" class="content-section">
+            <h2>🔄 Core Part 1: Item Depreciation & Desire for New Things</h2>
+            <h2 style="font-size: 1.5em; margin-top: -10px;">🔄 核心部分1：物品贬值与新事物渴望</h2>
+            
+            <div class="core-point">
+                <h3>Core Idea</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">核心观点</h3>
+                <p>Item value depreciates rapidly over time, mainly due to people's constant desire for new things. Consumers pursue the latest products, leading to massive waste as items get discarded quickly.</p>
+                <p>物品价值随时间快速贬值，主要源于人们对新事物的不断渴望。消费者追求最新产品，导致物品被快速丢弃，造成大量浪费。</p>
+            </div>
+            
+            <div class="case-study">
+                <h3>Case Study: Smartphone Depreciation</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">案例分析：智能手机贬值</h3>
+                <p>A new smartphone loses ~50% of its value within 6 months. Frequent upgrades create severe electronic waste.</p>
+                <p>全新智能手机上市6个月后贬值约50%。频繁升级造成严重电子垃圾。</p>
+            </div>
+
+            <!-- Interactive Session: Case Matching Game -->
+            <!-- 互动环节：古今协同消费案例匹配 -->
+            <div class="interactive-section">
+                <h3>🎮 Interactive Session: Ancient vs. Modern Collaborative Consumption Case Matching</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">🎮 互动环节：古今协同消费案例匹配</h3>
+                <p>Analyze the core features of each modern collaborative consumption case and match it with an ancient case with similar characteristics:</p>
+                <p>分析每个现代协同消费案例的核心特征，然后将其与具有相似特征的古代案例进行匹配：</p>
+                <div class="game-container">
+                    <div class="game-column">
+                        <h4>Modern Cases</h4>
+                        <h4 style="font-size: 1em; margin-top: -10px;">现代案例</h4>
+                        <div class="drag-item" draggable="true" data-modern-case="bike-sharing">Bike-sharing programs</div>
+                        <div class="drag-item" draggable="true" data-modern-case="freecycle">Freecycle</div>
+                        <div class="drag-item" draggable="true" data-modern-case="company-buses">Company buses</div>
+                        <div class="drag-item" draggable="true" data-modern-case="netjets">NetJets</div>
+                    </div>
+                    <div class="game-column">
+                        <h4>Ancient Cases</h4>
+                        <h4 style="font-size: 1em; margin-top: -10px;">古代案例</h4>
+                        <div class="drop-zone" data-ancient-case="barter">Trading a cow for a buffalo<br>交换牛羊</div>
+                        <div class="drop-zone" data-ancient-case="water-well">Jointly using the village water well<br>共享水井</div>
+                        <div class="drop-zone" data-ancient-case="common-courtyard">Egyptian homes with common courtyard<br>共同庭院</div>
+                    </div>
+                </div>
+                <div id="case-match-result" class="result" style="display: none;"></div>
+                <button class="btn" onclick="checkCaseMatchResult()">Check Answer</button>
+            </div>
+        </section>
+
+        <!-- Core Part 2: Collaborative Consumption as a Solution to Resource Scarcity -->
+        <!-- 核心部分2：协同消费是应对资源日益减少问题的解决方案 -->
+        <section id="section2" class="content-section">
+            <h2>🌍 Core Part 2: Collaborative Consumption as a Solution to Resource Scarcity</h2>
+            <h2 style="font-size: 1.5em; margin-top: -10px;">🌍 核心部分2：协同消费是应对资源日益减少问题的解决方案</h2>
+            
+            <div class="core-point">
+                <h3>Core Idea</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">核心观点</h3>
+                <p>Traditional "buy-own-discard" consumption is unsustainable due to resource scarcity. Collaborative consumption improves resource efficiency through sharing, renting, and exchanging.</p>
+                <p>传统的"购买-拥有-丢弃"消费模式因资源短缺而不可持续。协同消费通过共享、租借和交换提高资源利用效率。</p>
+            </div>
+            
+            <div class="case-study">
+                <h3>Case Study: Environmental Benefits of Bike-Sharing</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">案例分析：共享单车的环保效益</h3>
+                <p>1 shared bike replaces 5-10 private bikes, reducing resource consumption and carbon emissions.</p>
+                <p>1辆共享单车替代5-10辆私人自行车，减少资源消耗和碳排放。</p>
+            </div>
+
+            <!-- Interactive Session: Classification Challenge -->
+            <!-- 互动环节：分类挑战 -->
+            <div class="interactive-section">
+                <h3>🎯 Interactive Session: Collaborative Consumption Classification Challenge</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">🎯 互动环节：协同消费分类挑战</h3>
+                <p>Based on the core characteristics of collaborative consumption, drag the following consumption models into the corresponding categories:</p>
+                <p>根据协同消费的核心特征，将以下消费模式拖放到对应的类别中：</p>
+                <p style="font-weight: bold; color: #3498db;">Classification Criteria:</p>
+                <p style="font-weight: bold; color: #3498db; margin-top: -10px;">分类标准：</p>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                    <li><strong>Collaborative Consumption:</strong> Using resources through sharing, renting, or exchanging without emphasizing ownership.</li>
+                    <li><strong>协同消费：</strong>通过共享、租借、交换等方式使用资源，不强调所有权。</li>
+                    <li><strong>Non-Collaborative Consumption:</strong> Obtaining ownership through purchase and using resources alone.</li>
+                    <li><strong>非协同消费：</strong>通过购买获得所有权，独自使用资源。</li>
+                </ul>
+                <div class="game-container">
+                    <div class="game-column">
+                        <h4>Consumption Models</h4>
+                        <h4 style="font-size: 1em; margin-top: -10px;">消费模式</h4>
+                        <div class="drag-item" draggable="true" data-consumption-type="buy-car">Buying a new car<br>购买全新汽车</div>
+                        <div class="drag-item" draggable="true" data-consumption-type="bike-sharing">Bike-sharing<br>共享单车</div>
+                        <div class="drag-item" draggable="true" data-consumption-type="netflix">Netflix subscription<br>Netflix订阅</div>
+                        <div class="drag-item" draggable="true" data-consumption-type="private-gym">Private gym membership<br>私人健身房会员</div>
+                        <div class="drag-item" draggable="true" data-consumption-type="co-working">Co-working space<br>共享办公空间</div>
+                        <div class="drag-item" draggable="true" data-consumption-type="second-hand">Second-hand book trading<br>二手书交易</div>
+                        <div class="drag-item" draggable="true" data-consumption-type="airbnb">Airbnb accommodation<br>Airbnb住宿</div>
+                        <div class="drag-item" draggable="true" data-consumption-type="private-house">Buying a private house<br>购买私人住宅</div>
+                    </div>
+                    <div class="game-column">
+                        <h4>Categories</h4>
+                        <h4 style="font-size: 1em; margin-top: -10px;">类别</h4>
+                        <div class="drop-zone" data-category="collaborative">Collaborative Consumption<br>协同消费</div>
+                        <div class="drop-zone" data-category="non-collaborative">Non-Collaborative Consumption<br>非协同消费</div>
+                    </div>
+                </div>
+                <div id="classification-result" class="result" style="display: none;"></div>
+                <button class="btn" onclick="checkClassificationResult()">Check Answer</button>
+            </div>
+            
+            <!-- Interactive Session: Scenario Analysis Quiz -->
+            <!-- 互动环节：情景分析测验 -->
+            <div class="interactive-section">
+                <h3>🧠 Interactive Session: Scenario Analysis Quiz</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">🧠 互动环节：情景分析测验</h3>
+                <div class="quiz-question">
+                    <p><strong>Scenario:</strong> A city faces severe traffic congestion and air pollution. The government wants to promote green travel.</p>
+                    <p><strong>情景：</strong>某城市面临严重的交通拥堵和空气污染问题，政府希望推广绿色出行方式。</p>
+                    <p><strong>Question:</strong> Which of the following solutions best aligns with the concept of collaborative consumption and can effectively solve this problem?</p>
+                    <p><strong>问题：</strong>以下哪种方案最符合协同消费理念，能有效解决该问题？</p>
+                    <div class="quiz-option" data-option="A">A. Large-scale construction of new subway lines<br>A. 大规模建设新的地铁线路</div>
+                    <div class="quiz-option" data-option="B">B. Promoting bike-sharing and car-sharing services<br>B. 推广共享单车和共享汽车服务</div>
+                    <div class="quiz-option" data-option="C">C. Increasing private car purchase tax<br>C. 提高私家车购置税</div>
+                    <div class="quiz-option" data-option="D">D. Restricting private cars from entering the urban area<br>D. 限制私家车进入市区</div>
+                </div>
+                <div id="quiz-result-section2" class="result" style="display: none;"></div>
+                <button class="btn" onclick="checkQuizResult('section2')">Submit Answer</button>
+            </div>
+        </section>
+
+        <!-- Core Part 3: Specific Requirements for Collaborative Consumption Assets -->
+        <!-- 核心部分3：协同消费资产的特定要求 -->
+        <section id="section3" class="content-section">
+            <h2>📋 Core Part 3: Specific Requirements for Collaborative Consumption Assets</h2>
+            <h2 style="font-size: 1.5em; margin-top: -10px;">📋 核心部分3：协同消费资产的特定要求</h2>
+            
+            <div class="core-point">
+                <h3>Core Idea</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">核心观点</h3>
+                <p>Not all assets are suitable for collaborative consumption. Suitable assets typically meet these criteria:</p>
+                <p>并非所有资产都适合协同消费模式。适合协同消费的资产通常需要符合以下要求：</p>
+                <ul>
+                    <li><strong>High Value:</strong> Expensive to purchase, uneconomical to own individually.</li>
+                    <li><strong>高价值：</strong>购买成本较高，单独拥有不经济。</li>
+                    <li><strong>Low Usage Frequency:</strong> Idle most of the time.</li>
+                    <li><strong>低使用频率：</strong>大多数时间处于闲置状态。</li>
+                    <li><strong>Shareable:</strong> Physically allows multiple users.</li>
+                    <li><strong>可共享性：</strong>物理特性允许多人共享使用。</li>
+                </ul>
+            </div>
+            
+            <div class="case-study">
+                <h3>Case Study: Key Success Factors of Airbnb</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">案例分析：Airbnb的成功因素</h3>
+                <p>Airbnb's success lies in its assets (idle housing) perfectly matching collaborative consumption requirements:</p>
+                <p>Airbnb成功的关键在于其平台上的资产（闲置住房）完美符合协同消费资产要求：</p>
+                <ul>
+                    <li>High value, expensive to own alone</li>
+                    <li>价值高，单独拥有成本大</li>
+                    <li>Low usage frequency (vacation homes or spare rooms)</li>
+                    <li>使用频率低（度假住房或闲置房间）</li>
+                    <li>Naturally shareable</li>
+                    <li>具有天然的可共享性</li>
+                </ul>
+            </div>
+
+            <!-- Interactive Session: Asset Suitability Assessment -->
+            <!-- 互动环节：资产适合度评估游戏 -->
+            <div class="interactive-section">
+                <h3>🎯 Interactive Session: Asset Suitability Assessment</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">🎯 互动环节：资产适合度评估</h3>
+                <p>Determine whether the following assets are suitable for collaborative consumption:</p>
+                <p>请判断以下资产是否适合协同消费模式：</p>
+                <div class="game-container">
+                    <div class="game-column">
+                        <h4>Asset List</h4>
+                        <h4 style="font-size: 1em; margin-top: -10px;">资产列表</h4>
+                        <div class="drag-item" draggable="true" data-asset="toolbox">Home toolbox<br>家用工具箱</div>
+                        <div class="drag-item" draggable="true" data-asset="wedding-dress">Wedding dress<br>婚纱礼服</div>
+                        <div class="drag-item" draggable="true" data-asset="toothbrush">Electric toothbrush<br>电动牙刷</div>
+                        <div class="drag-item" draggable="true" data-asset="car">Family car<br>家用汽车</div>
+                        <div class="drag-item" draggable="true" data-asset="textbook">University textbook<br>大学教材</div>
+                        <div class="drag-item" draggable="true" data-asset="laptop">Daily use laptop<br>日常使用的笔记本电脑</div>
+                    </div>
+                    <div class="game-column">
+                        <h4>Suitability</h4>
+                        <h4 style="font-size: 1em; margin-top: -10px;">适合度</h4>
+                        <div class="drop-zone" data-asset-fit="suitable">Suitable for collaborative consumption<br>适合协同消费</div>
+                        <div class="drop-zone" data-asset-fit="unsuitable">Not suitable for collaborative consumption<br>不适合协同消费</div>
+                    </div>
+                </div>
+                <div id="asset-result" class="result" style="display: none;"></div>
+                <button class="btn" onclick="checkAssetResult()">Check Answer</button>
+            </div>
+        </section>
+
+        <!-- Core Part 4: Operational Challenges of Collaborative Consumption -->
+        <!-- 核心部分4：协同消费的运营挑战 -->
+        <section id="section4" class="content-section">
+            <h2>⚙️ Core Part 4: Operational Challenges of Collaborative Consumption</h2>
+            <h2 style="font-size: 1.5em; margin-top: -10px;">⚙️ 核心部分4：协同消费的运营挑战</h2>
+            
+            <div class="core-point">
+                <h3>Core Idea</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">核心观点</h3>
+                <p>The biggest challenge for collaborative consumption is simplifying operational processes, including:</p>
+                <p>协同消费模式面临的最大挑战是简化运营流程，包括：</p>
+                <ul>
+                    <li><strong>Trust Building:</strong> Establishing trust between strangers.</li>
+                    <li><strong>信任建立：</strong>如何在陌生人之间建立信任关系。</li>
+                    <li><strong>Resource Scheduling:</strong> Efficiently matching supply and demand.</li>
+                    <li><strong>资源调度：</strong>如何高效匹配供需，避免资源闲置或短缺。</li>
+                    <li><strong>Quality Control:</strong> Ensuring the quality and safety of shared assets.</li>
+                    <li><strong>质量控制：</strong>如何确保共享资产的质量和安全。</li>
+                </ul>
+            </div>
+            
+            <div class="case-study">
+                <h3>Case Study: Operational Challenges of Bike-Sharing</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">案例分析：共享单车的运营挑战</h3>
+                <p>Bike-sharing faced major operational issues:</p>
+                <p>共享单车行业曾面临主要运营挑战：</p>
+                <ul>
+                    <li>Illegal parking affecting urban management</li>
+                    <li>乱停乱放问题影响城市管理</li>
+                    <li>High bike damage rate, huge maintenance costs</li>
+                    <li>车辆损坏率高，维护成本巨大</li>
+                    <li>Incomplete user credit system, leading to bike loss</li>
+                    <li>用户信用体系不完善，导致车辆丢失</li>
+                </ul>
+            </div>
+
+            <!-- Interactive Session: Operational Challenge Solutions -->
+            <!-- 互动环节：运营挑战解决方案 -->
+            <div class="interactive-section">
+                <h3>💡 Interactive Session: Operational Challenge Solutions</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">💡 互动环节：运营挑战解决方案</h3>
+                <p>Choose the best solution for the following collaborative consumption operational challenge:</p>
+                <p>请为以下协同消费运营挑战选择最佳解决方案：</p>
+                <div class="quiz-question">
+                    <p><strong>Challenge:</strong> Shared assets on the platform have uneven quality, leading to high user complaint rates.</p>
+                    <p><strong>挑战：</strong>共享平台上的资产质量参差不齐，用户投诉率高。</p>
+                    <div class="quiz-option" data-option="A">A. Increase platform service fees<br>A. 提高平台服务费</div>
+                    <div class="quiz-option" data-option="B">B. Establish a strict asset review and rating system<br>B. 建立严格的资产审核和评级系统</div>
+                    <div class="quiz-option" data-option="C">C. Reduce the number of assets on the platform<br>C. 减少平台上的资产数量</div>
+                    <div class="quiz-option" data-option="D">D. Ignore user complaints<br>D. 对用户投诉置之不理</div>
+                </div>
+                <div id="quiz-result-section4" class="result" style="display: none;"></div>
+                <button class="btn" onclick="checkQuizResult('section4')">Submit Answer</button>
+            </div>
+        </section>
+
+        <!-- Core Part 5: The Broad Future Prospects of Collaborative Consumption -->
+        <!-- 核心部分5：协同消费的未来前景广阔 -->
+        <section id="section5" class="content-section">
+            <h2>🚀 Core Part 5: The Broad Future Prospects of Collaborative Consumption</h2>
+            <h2 style="font-size: 1.5em; margin-top: -10px;">🚀 核心部分5：协同消费的未来前景广阔</h2>
+            
+            <div class="core-point">
+                <h3>Core Idea</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">核心观点</h3>
+                <p>Collaborative consumption has broad future prospects, mainly reflected in:</p>
+                <p>协同消费模式拥有广阔的未来前景，主要体现在以下方面：</p>
+                <ul>
+                    <li><strong>Tech-driven:</strong> AI, big data, IoT will optimize resource matching and user experience.</li>
+                    <li><strong>技术驱动：</strong>人工智能、大数据、物联网等技术将优化资源匹配和用户体验。</li>
+                    <li><strong>Sustainable development:</strong> Aligns with global sustainability trends, will receive policy support.</li>
+                    <li><strong>可持续发展：</strong>符合全球可持续发展趋势，将得到政策支持。</li>
+                </ul>
+            </div>
+            
+            <div class="case-study">
+                <h3>Case Study: Innovative Directions for Future Collaborative Consumption</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">案例分析：未来协同消费的创新方向</h3>
+                <p>Emerging collaborative consumption models changing our lives:</p>
+                <p>新兴协同消费模式正在改变我们的生活方式：</p>
+                <ul>
+                    <li><strong>Co-working spaces:</strong> Flexible office solutions like WeWork.</li>
+                    <li><strong>共享办公：</strong>如WeWork，提供灵活的办公空间解决方案。</li>
+                    <li><strong>Skill sharing:</strong> Connecting skilled people with those in need (e.g., TaskRabbit).</li>
+                    <li><strong>技能共享：</strong>如TaskRabbit，连接有技能的人和需要帮助的人。</li>
+                </ul>
+            </div>
+
+            <!-- Interactive Session: Future Collaborative Consumption Creative Design -->
+            <!-- 互动环节：未来协同消费创意设计 -->
+            <div class="interactive-section">
+                <h3>💫 Interactive Session: Future Collaborative Consumption Creative Design</h3>
+                <h3 style="font-size: 1.2em; margin-top: -10px;">💫 互动环节：未来协同消费创意设计</h3>
+                <p>Use your imagination to design a future collaborative consumption scenario:</p>
+                <p>请发挥你的想象力，设计一个未来的协同消费场景：</p>
+                <form id="future-idea-form">
+                    <div style="margin: 15px 0;">
+                        <label for="future-idea"><strong>Your Idea:</strong></label><br>
+                        <label for="future-idea" style="margin-top: -10px; display: block;"><strong>你的创意：</strong></label>
+                        <textarea id="future-idea" rows="4" cols="80" placeholder="E.g.: Future community shared kitchen where residents share cooking equipment and ingredients...
+例如：未来社区共享厨房，居民可以共享烹饪设备和食材..." style="margin: 10px 0; padding: 10px; border-radius: 5px; border: 1px solid #ddd;"></textarea>
+                    </div>
+                    <button type="submit" class="btn">Submit Idea</button>
+                </form>
+                <div id="idea-result" class="result" style="display: none;"></div>
+            </div>
+            
+            <!-- 数据可视化：协同消费增长趋势 -->
+            <div class="content-section" style="margin-top: 30px;">
+                <h3>📊 协同消费市场增长趋势</h3>
+                <div style="display: flex; justify-content: center; background-color: #f8f0d9; padding: 20px; border-radius: 10px; border: 1px solid #d4a76a;">
+                    <div id="growth-chart" style="width: 100%; max-width: 600px;"></div>
+                </div>
+                <p style="text-align: center; margin-top: 15px; font-style: italic; color: #5d4037;">数据来源：协同消费行业报告（2018-2024）</p>
+            </div>
+        </section>
+
+        <!-- 认知巩固环节 -->
+        <section class="content-section" style="background-color: #fff8e1; border-left: 5px solid #ffb300;">
+            <h2>🧠 认知巩固：思考引导-实践验证-认知重构</h2>
+            
+            <!-- 分析过程总结 -->
+            <div style="margin: 20px 0;">
+                <h3 style="color: #f57c00;">🔄 分析过程总结</h3>
+                <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p>Let's review the complete cognitive development path from text understanding to case analysis and practical verification:</p>
+                    <p>让我们梳理一下从文本理解到案例分析再到实践验证的完整认知发展路径：</p>
+                    <div style="margin-left: 20px; line-height: 2;">
+                        <p><strong>1. Text Understanding</strong>：Building initial cognition of "historical continuity of collaborative consumption" through Socratic questioning from ancient cases.</p>
+                        <p><strong>文本理解</strong>：通过苏格拉底提问法，从古代协同消费案例出发，建立了"协同消费历史延续性"的初步认知</p>
+                        <p><strong>2. Case Matching</strong>：Deepening understanding of core features by matching modern cases with ancient ones.</p>
+                        <p><strong>案例匹配</strong>：将现代协同消费案例与古代案例进行特征匹配，深化了对协同消费核心特征的理解</p>
+                        <p><strong>3. Classification Challenge</strong>：Clarifying the core differences between collaborative and non-collaborative consumption.</p>
+                        <p><strong>分类挑战</strong>：通过对不同消费模式的分类，明确了协同消费与非协同消费的核心区别</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>&copy; 2025 协同消费的智慧 - 互动式教学网页</p>
+    </footer>
+
+    <!-- JavaScript 交互逻辑 -->
+    <script>
+        // 导航栏激活状态
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 拖拽功能
+        let draggedItem = null;
+
+        document.querySelectorAll('.drag-item').forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                draggedItem = this;
+                setTimeout(() => this.style.opacity = '0.5', 0);
+            });
+
+            item.addEventListener('dragend', function() {
+                setTimeout(() => this.style.opacity = '1', 0);
+                draggedItem = null;
+            });
+        });
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            });
+
+            zone.addEventListener('dragleave', function() {
+                this.classList.remove('drag-over');
+            });
+
+            zone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                if (draggedItem) {
+                    this.appendChild(draggedItem);
+                }
+            });
+        });
+
+        // 案例匹配游戏答案检查
+        function checkCaseMatchResult() {
+            const resultDiv = document.getElementById('case-match-result');
+            const barterZone = document.querySelector('[data-ancient-case="barter"]');
+            const waterWellZone = document.querySelector('[data-ancient-case="water-well"]');
+            const courtyardZone = document.querySelector('[data-ancient-case="common-courtyard"]');
+            
+            // 正确答案：现代案例 -> 古代案例的匹配关系
+            const correctMatches = {
+                'freecycle': 'barter',         // Freecycle 是物品交换，对应古代的交换牛羊
+                'bike-sharing': 'water-well',  // 共享单车是共享资源，对应古代的共享水井
+                'company-buses': 'water-well', // 公司班车是共享交通资源，对应古代的共享水井
+                'netjets': 'common-courtyard'  // NetJets 是共享高端资源，对应古代的共同庭院（共享空间）
+            };
+            
+            let correct = true;
+            let explanation = '';
+            
+            // 检查每个古代案例区域
+            const zones = [barterZone, waterWellZone, courtyardZone];
+            zones.forEach(zone => {
+                const ancientCase = zone.dataset.ancientCase;
+                const modernItems = Array.from(zone.querySelectorAll('.drag-item')).map(item => item.dataset.modernCase);
+                
+                // 检查该区域的所有现代案例是否都应该匹配到这个古代案例
+                modernItems.forEach(item => {
+                    if (correctMatches[item] !== ancientCase) {
+                        correct = false;
+                    }
+                });
+            });
+            
+            // 准备正确答案的详细解释
+            const correctExplanation = '✅ 正确答案：<br>' +
+                                      '- Freecycle → Trading a cow for a buffalo (交换牛羊)：Direct item exchange<br>' +
+                                      '- Bike-sharing programs → Jointly using the village water well (共享水井)：Shared public resources<br>' +
+                                      '- Company buses → Jointly using the village water well (共享水井)：Shared transportation resources<br>' +
+                                      '- NetJets → Egyptian homes with common courtyard (共同庭院)：Shared high-end resources';
+            
+            if (correct) {
+                explanation = '✅ 回答正确！<br><br>' + correctExplanation;
+                resultDiv.innerHTML = explanation;
+                resultDiv.className = 'result correct';
+                // 播放正确音效
+                const audio = new Audio('cheer.mp3');
+                audio.play();
+            } else {
+                explanation = '❌ 回答有误！<br><br>' + correctExplanation;
+                resultDiv.innerHTML = explanation;
+                resultDiv.className = 'result incorrect';
+                // 播放错误音效
+                const audio = new Audio('error.mp3');
+                audio.play();
+            }
+            resultDiv.style.display = 'block';
+        }
+
+        // 资产适合度检查
+        function checkAssetResult() {
+            const resultDiv = document.getElementById('asset-result');
+            const suitableZone = document.querySelector('[data-asset-fit="suitable"]');
+            const unsuitableZone = document.querySelector('[data-asset-fit="unsuitable"]');
+            
+            // 正确答案
+            const correctSuitable = ['toolbox', 'wedding-dress', 'car', 'textbook'];
+            const correctUnsuitable = ['toothbrush', 'laptop'];
+            
+            let correct = true;
+            
+            // 检查适合区域
+            const suitableItems = Array.from(suitableZone.querySelectorAll('.drag-item')).map(item => item.dataset.asset);
+            if (!suitableItems.every(item => correctSuitable.includes(item)) || suitableItems.length !== correctSuitable.length) {
+                correct = false;
+            }
+            
+            // 检查不适合区域
+            const unsuitableItems = Array.from(unsuitableZone.querySelectorAll('.drag-item')).map(item => item.dataset.asset);
+            if (!unsuitableItems.every(item => correctUnsuitable.includes(item)) || unsuitableItems.length !== correctUnsuitable.length) {
+                correct = false;
+            }
+            
+            // 准备结果信息
+            const assetNames = {
+                'toolbox': 'Home toolbox (家用工具箱)',
+                'wedding-dress': 'Wedding dress (婚纱礼服)',
+                'car': 'Family car (家用汽车)',
+                'textbook': 'University textbook (大学教材)',
+                'toothbrush': 'Electric toothbrush (电动牙刷)',
+                'laptop': 'Daily use laptop (日常使用的笔记本电脑)'
+            };
+            
+            const correctSuitableNames = correctSuitable.map(id => assetNames[id]).join(', ');
+            const correctUnsuitableNames = correctUnsuitable.map(id => assetNames[id]).join(', ');
+            
+            if (correct) {
+                resultDiv.innerHTML = `✅ 回答正确！你已经掌握了协同消费资产的特点。<br><br>` +
+                                      `<strong>正确答案：</strong><br>` +
+                                      `适合协同消费：${correctSuitableNames}<br>` +
+                                      `不适合协同消费：${correctUnsuitableNames}`;
+                resultDiv.className = 'result correct';
+                // 播放正确音效
+                const audio = new Audio('cheer.mp3');
+                audio.play();
+            } else {
+                resultDiv.innerHTML = `❌ 回答有误，请重新思考后再试。<br><br>` +
+                                      `<strong>正确答案：</strong><br>` +
+                                      `适合协同消费：${correctSuitableNames}<br>` +
+                                      `不适合协同消费：${correctUnsuitableNames}<br><br>` +
+                                      `提示：适合协同消费的资产通常是高价值、低使用频率、可共享的物品。`;
+                resultDiv.className = 'result incorrect';
+                // 播放错误音效
+                const audio = new Audio('error.mp3');
+                audio.play();
+            }
+            resultDiv.style.display = 'block';
+        }
+        
+        // 分类挑战答案检查
+        function checkClassificationResult() {
+            const resultDiv = document.getElementById('classification-result');
+            const collaborativeZone = document.querySelector('[data-category="collaborative"]');
+            const nonCollaborativeZone = document.querySelector('[data-category="non-collaborative"]');
+            
+            // 正确答案
+            const correctCollaborative = ['bike-sharing', 'netflix', 'co-working', 'second-hand', 'airbnb'];
+            const correctNonCollaborative = ['buy-car', 'private-gym', 'private-house'];
+            
+            let correct = true;
+            
+            // 检查协同消费区域
+            const collaborativeItems = Array.from(collaborativeZone.querySelectorAll('.drag-item')).map(item => item.dataset.consumptionType);
+            if (!collaborativeItems.every(item => correctCollaborative.includes(item)) || collaborativeItems.length !== correctCollaborative.length) {
+                correct = false;
+            }
+            
+            // 检查非协同消费区域
+            const nonCollaborativeItems = Array.from(nonCollaborativeZone.querySelectorAll('.drag-item')).map(item => item.dataset.consumptionType);
+            if (!nonCollaborativeItems.every(item => correctNonCollaborative.includes(item)) || nonCollaborativeItems.length !== correctNonCollaborative.length) {
+                correct = false;
+            }
+            
+            // 消费模式名称映射
+            const consumptionTypeNames = {
+                'bike-sharing': 'Bike-sharing (共享单车)',
+                'netflix': 'Netflix subscription (Netflix订阅)',
+                'co-working': 'Co-working space (共享办公空间)',
+                'second-hand': 'Second-hand book trading (二手书交易)',
+                'airbnb': 'Airbnb accommodation (Airbnb住宿)',
+                'buy-car': 'Buying a new car (购买全新汽车)',
+                'private-gym': 'Private gym membership (私人健身房会员)',
+                'private-house': 'Buying a private house (购买私人住宅)'
+            };
+            
+            // 准备正确答案的详细解释
+            const correctCollaborativeNames = correctCollaborative.map(id => consumptionTypeNames[id]).join('<br>');
+            const correctNonCollaborativeNames = correctNonCollaborative.map(id => consumptionTypeNames[id]).join('<br>');
+            
+            const correctExplanation = '✅ 正确答案：<br>' +
+                                      '<strong>Collaborative Consumption (协同消费)：</strong><br>' + correctCollaborativeNames + '<br><br>' +
+                                      '<strong>Non-Collaborative Consumption (非协同消费)：</strong><br>' + correctNonCollaborativeNames;
+            
+            if (correct) {
+                resultDiv.innerHTML = '✅ 回答正确！你已经掌握了协同消费与非协同消费的核心区别。<br><br>' + correctExplanation;
+                resultDiv.className = 'result correct';
+                // 播放正确音效
+                const audio = new Audio('cheer.mp3');
+                audio.play();
+            } else {
+                resultDiv.innerHTML = '❌ 回答有误！<br><br>' + correctExplanation;
+                resultDiv.className = 'result incorrect';
+                // 播放错误音效
+                const audio = new Audio('error.mp3');
+                audio.play();
+            }
+            resultDiv.style.display = 'block';
+        }
+
+        // 测验选项选择
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // 移除同组其他选项的选中状态
+                const group = this.closest('.quiz-question');
+                group.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                // 添加当前选项的选中状态
+                this.classList.add('selected');
+            });
+        });
+
+        // 测验答案检查
+        function checkQuizResult(section) {
+            const resultDiv = document.getElementById(`quiz-result-${section}`);
+            const question = document.querySelector(`#${section} .quiz-question`);
+            const selectedOption = question.querySelector('.quiz-option.selected');
+            
+            if (!selectedOption) {
+                resultDiv.innerHTML = '⚠️ 请先选择一个答案！';
+                resultDiv.className = 'result incorrect';
+                resultDiv.style.display = 'block';
+                return;
+            }
+            
+            const selectedValue = selectedOption.dataset.option;
+            let correctAnswer, explanation;
+            
+            // 设置各部分的正确答案和解释
+            if (section === 'section2') {
+                correctAnswer = 'B';
+                explanation = '✅ 正确！推广共享单车和共享汽车服务是典型的协同消费模式，能够有效减少私家车使用，缓解交通拥堵和空气污染。';
+            } else if (section === 'section4') {
+                correctAnswer = 'B';
+                explanation = '✅ 正确！建立严格的资产审核和评级系统可以有效提高共享资产的质量，减少用户投诉。';
+            }
+            
+            if (selectedValue === correctAnswer) {
+                resultDiv.innerHTML = explanation;
+                resultDiv.className = 'result correct';
+                // 播放正确音效
+                const audio = new Audio('cheer.mp3');
+                audio.play();
+            } else {
+                resultDiv.innerHTML = `❌ 回答错误！正确答案是 ${correctAnswer}。<br><br>${explanation}`;
+                resultDiv.className = 'result incorrect';
+                // 播放错误音效
+                const audio = new Audio('error.mp3');
+                audio.play();
+            }
+            resultDiv.style.display = 'block';
+        }
+        
+        // 数据可视化：协同消费增长趋势
+        function createGrowthChart() {
+            // 模拟数据：协同消费市场规模增长（单位：十亿美元）
+            const years = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
+            const marketSize = [18, 23, 29, 35, 43, 52, 63];
+            
+            // 查找图表容器
+            const chartContainer = document.getElementById('growth-chart');
+            if (!chartContainer) return;
+            
+            // 清除现有内容
+            chartContainer.innerHTML = '';
+            
+            // 创建SVG元素
+            const svgWidth = 600;
+            const svgHeight = 300;
+            const margin = { top: 20, right: 20, bottom: 40, left: 50 };
+            const width = svgWidth - margin.left - margin.right;
+            const height = svgHeight - margin.top - margin.bottom;
+            
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', svgWidth);
+            svg.setAttribute('height', svgHeight);
+            chartContainer.appendChild(svg);
+            
+            // 创建绘图区域
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.setAttribute('transform', `translate(${margin.left},${margin.top})`);
+            svg.appendChild(g);
+            
+            // 计算比例尺
+            const xScale = years.map((year, index) => (index / (years.length - 1)) * width);
+            const maxMarketSize = Math.max(...marketSize);
+            const yScale = marketSize.map(size => height - (size / maxMarketSize) * height);
+            
+            // 绘制坐标轴
+            // X轴
+            const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            xAxis.setAttribute('x1', 0);
+            xAxis.setAttribute('y1', height);
+            xAxis.setAttribute('x2', width);
+            xAxis.setAttribute('y2', height);
+            xAxis.setAttribute('stroke', '#8b4513');
+            xAxis.setAttribute('stroke-width', 2);
+            g.appendChild(xAxis);
+            
+            // Y轴
+            const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            yAxis.setAttribute('x1', 0);
+            yAxis.setAttribute('y1', 0);
+            yAxis.setAttribute('x2', 0);
+            yAxis.setAttribute('y2', height);
+            yAxis.setAttribute('stroke', '#8b4513');
+            yAxis.setAttribute('stroke-width', 2);
+            g.appendChild(yAxis);
+            
+            // 绘制数据点和线条
+            let pathData = `M ${xScale[0]} ${yScale[0]}`;
+            for (let i = 1; i < years.length; i++) {
+                pathData += ` L ${xScale[i]} ${yScale[i]}`;
+            }
+            
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            line.setAttribute('d', pathData);
+            line.setAttribute('fill', 'none');
+            line.setAttribute('stroke', '#d4a76a');
+            line.setAttribute('stroke-width', 3);
+            g.appendChild(line);
+            
+            // 绘制数据点
+            for (let i = 0; i < years.length; i++) {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', xScale[i]);
+                circle.setAttribute('cy', yScale[i]);
+                circle.setAttribute('r', 5);
+                circle.setAttribute('fill', '#8b4513');
+                circle.setAttribute('stroke', '#fff');
+                circle.setAttribute('stroke-width', 2);
+                g.appendChild(circle);
+                
+                // 添加年份标签
+                const yearText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                yearText.setAttribute('x', xScale[i]);
+                yearText.setAttribute('y', height + 20);
+                yearText.setAttribute('text-anchor', 'middle');
+                yearText.setAttribute('font-size', '12');
+                yearText.setAttribute('fill', '#5d4037');
+                yearText.textContent = years[i];
+                g.appendChild(yearText);
+                
+                // 添加数值标签
+                const valueText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                valueText.setAttribute('x', xScale[i]);
+                valueText.setAttribute('y', yScale[i] - 10);
+                valueText.setAttribute('text-anchor', 'middle');
+                valueText.setAttribute('font-size', '10');
+                valueText.setAttribute('fill', '#8b4513');
+                valueText.setAttribute('font-weight', 'bold');
+                valueText.textContent = marketSize[i] + 'B';
+                g.appendChild(valueText);
+            }
+            
+            // 添加Y轴标签
+            const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yLabel.setAttribute('x', -height / 2);
+            yLabel.setAttribute('y', -30);
+            yLabel.setAttribute('transform', 'rotate(-90)');
+            yLabel.setAttribute('text-anchor', 'middle');
+            yLabel.setAttribute('font-size', '14');
+            yLabel.setAttribute('fill', '#8b4513');
+            yLabel.setAttribute('font-weight', 'bold');
+            yLabel.textContent = 'Market Size (Billion USD)';
+            g.appendChild(yLabel);
+        }
+        
+        // 页面加载完成后创建图表
+        window.addEventListener('load', function() {
+            createGrowthChart();
+        });
+
+        // 未来协同消费创意提交
+        document.getElementById('future-idea-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const ideaInput = document.getElementById('future-idea');
+            const resultDiv = document.getElementById('idea-result');
+            
+            if (ideaInput.value.trim() === '') {
+                resultDiv.innerHTML = '⚠️ 请输入你的创意！';
+                resultDiv.className = 'result incorrect';
+            } else {
+                resultDiv.innerHTML = '✅ 你的创意已提交！感谢你的积极参与。';
+                resultDiv.className = 'result correct';
+                ideaInput.value = '';
+            }
+            resultDiv.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
